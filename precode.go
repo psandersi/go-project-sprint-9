@@ -94,14 +94,6 @@ func main() {
 		close(chOut)
 	}()
 
-	// // Закрываем каналы outs после завершения Generator
-	// go func() {
-	// 	<-ctx.Done()
-	// 	for _, ch := range outs {
-	// 		close(ch)
-	// 	}
-	// }()
-
 	var count int64 // количество чисел результирующего канала
 	var sum int64   // сумма чисел результирующего канала
 
