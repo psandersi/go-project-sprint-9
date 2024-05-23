@@ -32,7 +32,12 @@ Loop:
 // Worker читает число из канала in и пишет его в канал out.
 func Worker(in <-chan int64, out chan<- int64) {
 	// Функция Worker
-	for v := range in {
+	for {
+		v, ok := <-in
+		if ok == false {
+			close(out)
+			break
+		}
 		out <- v
 		time.Sleep(1 * time.Millisecond)
 	}
@@ -89,13 +94,13 @@ func main() {
 		close(chOut)
 	}()
 
-	// Закрываем каналы outs после завершения Generator
-	go func() {
-		<-ctx.Done()
-		for _, ch := range outs {
-			close(ch)
-		}
-	}()
+	// // Закрываем каналы outs после завершения Generator
+	// go func() {
+	// 	<-ctx.Done()
+	// 	for _, ch := range outs {
+	// 		close(ch)
+	// 	}
+	// }()
 
 	var count int64 // количество чисел результирующего канала
 	var sum int64   // сумма чисел результирующего канала
